@@ -37,7 +37,7 @@ for i in range(img_num):
 
 revimgs = np.zeros((img_num, img_dim), np.float32)
 dim_num = 80
-target_img_num = 100
+target_img_num = 0
 
 # 全画像データを80次元に
 for i in range(img_num):
@@ -58,3 +58,22 @@ for i in range(img_num):
 
 sorted_data_dict = sorted(data_dict.items(), key=lambda x: x[1])
 pprint.pprint(sorted_data_dict)
+
+bush_img_nums = [0, 3, 13, 18, 26, 40, 42, 46, 50, 52, 59, 60, 70, 76, 79, 82, 84, 85, 90, 103, 107, 108,
+                 113, 114, 116, 118, 121, 123, 124, 129, 136, 141, 147, 152, 154, 159, 164, 170, 171, 183, 191, 199]
+
+for theta in range(850, 4000, 100):
+    TP = FN = FP = TN = 0
+    for index, dist in data_dict.items():
+        if(dist < theta and index in bush_img_nums):
+            TP += 1
+        elif(dist > theta and index in bush_img_nums):
+            FN += 1
+        elif(dist < theta and index not in bush_img_nums):
+            FP += 1
+        else:
+            TN += 1
+
+    recall = TP/(TP+FN)
+    precision = TP/(TP+FP)
+    print(precision, recall)
